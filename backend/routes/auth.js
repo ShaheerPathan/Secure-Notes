@@ -13,16 +13,22 @@ function generateEncryptionKey() {
 
 // Encrypt the encryption key with user's password hash
 function encryptEncryptionKey(encryptionKey, passwordHash) {
-    const cipher = crypto.createCipher('aes-256-cbc', passwordHash);
+    const iv = crypto.randomBytes(16); // Generate random IV
+    const key = crypto.scryptSync(passwordHash, 'salt', 32); // Derive key from password
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
     let encrypted = cipher.update(encryptionKey, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    return encrypted;
+    return iv.toString('hex') + ':' + encrypted; // Prepend IV to encrypted data
 }
 
 // Decrypt the encryption key with user's password hash
 function decryptEncryptionKey(encryptedKey, passwordHash) {
-    const decipher = crypto.createDecipher('aes-256-cbc', passwordHash);
-    let decrypted = decipher.update(encryptedKey, 'hex', 'utf8');
+    const parts = encryptedKey.split(':');
+    const iv = Buffer.from(parts[0], 'hex');
+    const encrypted = parts[1];
+    const key = crypto.scryptSync(passwordHash, 'salt', 32); // Derive same key from password
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
 }
@@ -50,8 +56,7 @@ router.post('/register', async (req, res) => {
         await user.save();
         
         res.status(201).json({ 
-            message: 'User registered successfully',
-            encryptionKey: encryptionKey // Send the original (unhashed) key to frontend
+            message: 'User registered successfully'
         });
     } catch (error) {
         console.error('Registration error:', error);
@@ -84,7 +89,6 @@ router.post('/login', async (req, res) => {
         
         res.json({
             token,
-            encryptionKey: decryptedEncryptionKey, // Send decrypted encryption key
             user: {
                 id: user._id,
                 name: user.name,
