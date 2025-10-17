@@ -3,36 +3,65 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
 
 const authRoutes = require('./routes/auth');
 const notesRoutes = require('./routes/notes');
 
 const app = express();
 
-app.use(cors(
-    {
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        credentials: true
-    }
-));
+// ✅ Middleware setup
+app.use(helmet()); // Security headers
+app.use(compression()); // Gzip compression for faster responses
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 
 app.use(express.json());
 
+// ✅ MongoDB connection
+const mongoURL = process.env.MONGO_URL;
+if (!mongoURL) {
+    console.error('❌ MONGO_URL not found in .env');
+    process.exit(1);
+}
 
-mongoose.connect(process.env.MONGO_URL)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
-    
+mongoose.connect(mongoURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => {
+        console.error('❌ MongoDB connection error:', err);
+        process.exit(1);
+    });
 
+// ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
 
+// ✅ Default route
 app.get('/', (req, res) => {
-    res.json({ status: 'ok' });
+    res.json({ status: 'SecureNotes backend running successfully 🚀' });
 });
 
-const PORT = process.env.BACKEND_PORT;
+// ✅ 404 fallback
+app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
+
+// ✅ Global error handler
+app.use((err, req, res, next) => {
+    console.error('🔥 Server Error:', err.stack);
+    res.status(500).json({ message: 'Internal server error' });
+});
+
+// ✅ Start server
+const PORT = process.env.BACKEND_PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Backend running on port ${PORT}`);
+    console.log(`🚀 SecureNotes backend running on port ${PORT}`);
 });
