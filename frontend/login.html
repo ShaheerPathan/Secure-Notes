@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Notes App</title>
+    <link rel="icon" type="image/png" href="sticky-note.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="auth-page" >
+        <div class="auth-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+            </div>
+        </div>
+        
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo-container">
+                        <div class="logo-icon">📝</div>
+                        <h1>Notes Vault</h1>
+                    </div>
+                    <p class="tagline">Your thoughts, perfectly organized</p>
+                </div>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="showLogin()">
+                        <span class="tab-icon">🔐</span>
+                        <span>Sign In</span>
+                    </button>
+                    <button class="auth-tab" onclick="showRegister()">
+                        <span class="tab-icon">✨</span>
+                        <span>Sign Up</span>
+                    </button>
+                    <div class="tab-indicator" id="tabIndicator"></div>
+                </div>
+                
+                <div class="forms-container">
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="loginEmail" placeholder="Email address" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="loginPassword" placeholder="Password" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <span>Sign In</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </form>
+                    
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="registerName" placeholder="Full name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="registerEmail" placeholder="Email address" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="registerPassword" placeholder="Create password (min 6 characters)" required minlength="6">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <span>Create Account</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div id="message" class="notification"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
