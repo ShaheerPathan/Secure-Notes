@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:3000/api';
+// Auto-detect API URL based on current host
+const API_URL = window.location.protocol + '//' + window.location.host + '/api';
 
 // Get user's encryption key from localStorage
 function getUserEncryptionKey() {
@@ -16,12 +17,12 @@ function logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('userName');
     localStorage.removeItem('encryptionKey');
-    window.location.href = 'login.html';
+    window.location.href = '/login';
 }
 
 // Check authentication
 if (!localStorage.getItem('token')) {
-    window.location.href = 'login.html';
+    window.location.href = '/login';
 }
 
 // Display username

@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:3000/api';
+// Auto-detect API URL based on current host
+const API_URL = window.location.protocol + '//' + window.location.host + '/api';
 
 function showLogin() {
     const loginForm = document.getElementById('loginForm');
@@ -77,7 +78,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             localStorage.setItem('encryptionKey', data.encryptionKey); // Store user's encryption key
             showMessage('Login successful! Redirecting...', 'success');
             setTimeout(() => {
-                window.location.href = '/frontend/index.html';
+                window.location.href = '/index';
             }, 1000);
         } else {
             showMessage(data.message || 'Login failed. Please check your credentials.', 'error');

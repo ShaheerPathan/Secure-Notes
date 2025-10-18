@@ -40,13 +40,24 @@ mongoose.connect(mongoURL, {
         process.exit(1);
     });
 
+// ✅ Serve static frontend files
+app.use(express.static(path.join(__dirname, '..')));
+
 // ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
 
-// ✅ Default route
+// ✅ Clean URL routes
 app.get('/', (req, res) => {
-    res.json({ status: 'SecureNotes backend running successfully 🚀' });
+    res.sendFile(path.join(__dirname, '../login.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../login.html'));
+});
+
+app.get('/index', (req, res) => {
+    res.sendFile(path.join(__dirname, '../index.html'));
 });
 
 // ✅ 404 fallback
