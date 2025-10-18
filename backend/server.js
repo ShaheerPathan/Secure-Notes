@@ -41,7 +41,7 @@ mongoose.connect(mongoURL, {
     });
 
 // ✅ Serve static frontend files
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // ✅ Routes
 app.use('/api/auth', authRoutes);
@@ -49,15 +49,15 @@ app.use('/api/notes', notesRoutes);
 
 // ✅ Clean URL routes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../login.html'));
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../login.html'));
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
 app.get('/index', (req, res) => {
-    res.sendFile(path.join(__dirname, '../index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // ✅ 404 fallback
